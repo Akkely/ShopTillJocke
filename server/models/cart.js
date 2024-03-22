@@ -1,7 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define(
-		"cart",
-		{
+	const Cart =sequelize.define('cart',{
+	
+		userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+		
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -15,4 +19,6 @@ module.exports = (sequelize, DataTypes) => {
 
 		{ underscored: true }
 	);
+	
+	return  Cart;
 };

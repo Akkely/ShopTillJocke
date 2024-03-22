@@ -12,7 +12,7 @@ const postService = require("../services/postService");
 // });
 
 // POST route för att lägga till en produkt i varukorgen
-router.post("/carts/addProduct", async (req, res) => {
+router.post("/addProduct", async (req, res) => {
 	const { userId, productId, amount } = req.body;
 
 	try {
@@ -172,5 +172,28 @@ router.get("/test/addProduct", async (req, res) => {
 					message: "Internt serverfel vid tillägg av produkt till varukorgen via GET-förfrågan",
 			});
 	}
+});
+
+
+
+
+router.get("/addProduct", (req, res) => {
+	db.cart.findAll().then((result) => {
+		res.send(result);
+	});
+});
+
+router.get("/carts", (req, res) => {
+	db.cart.findAll({
+			include: [{
+					model: db.product,
+					as: 'products' // Antaget att du har definierat denna association
+			}]
+	}).then((carts) => {
+			res.json(carts);
+	}).catch((error) => {
+			console.error("Error fetching carts:", error);
+			res.status(500).json({ message: "Internal server error" });
+	});
 });
 module.exports = router;

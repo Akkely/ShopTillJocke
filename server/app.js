@@ -15,6 +15,9 @@ app.use((req, res, next) => {
 });
 
 app.use("/carts", require("./routes/cartsRoute"));
+app.use("/carts", require("./routes/cartsRoute"));
+
+
 app.use("/products", require("./routes/productsRoute"));
 app.use("/users", require("./routes/usersRoute"));
 

@@ -55,15 +55,24 @@ db.user.hasMany(db.cart, {
 });
 
 
-
-db.product.belongsToMany(db.cart, { through: db.cartRow });
-db.cart.belongsToMany(db.product, { through: db.cartRow });
+db.product.belongsToMany(db.cart, { through: 'CartRow' }); // Använd modellnamnet som en sträng
+db.cart.belongsToMany(db.product, { through: 'CartRow' });
+// db.product.belongsToMany(db.cart, { through: db.cartRow });
+// db.cart.belongsToMany(db.product, { through: db.cartRow });
 
 db.review.belongsTo(db.product);
 db.product.hasMany(db.review, {
 	allowNull: false,
 	onDelete: "CASCADE",
 });
+
+db.cart.belongsTo(db.user, {foreignKey: 'userId'});
+db.user.hasMany(db.cart, {foreignKey: 'userId'});
+
+
+db.cart = require('./cart.js')(sequelize, Sequelize);
+db.cartItem = require('./cartRow.js')(sequelize, Sequelize);
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
