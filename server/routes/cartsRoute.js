@@ -13,16 +13,16 @@ const postService = require("../services/postService");
 
 // POST route för att lägga till en produkt i varukorgen
 router.post("/addProduct", async (req, res) => {
-  const { userId, productId, amount } = req.body;
+  const {  productId, amount } = req.body;
 
   try {
     // Hitta en befintlig varukorg för användaren som inte har betalats, annars skapa en ny
     let cart = await db.cart.findOne({
-      where: { userId: userId, payed: false },
+      where: { payed: false },
     });
 
     if (!cart) {
-      cart = await db.cart.create({ userId: userId, payed: false });
+      cart = await db.cart.create({ payed: false });
     }
 
     // Lägg till produkten i varukorgen
@@ -57,12 +57,7 @@ router.get("/:id", async (req, res) => {
 	try {
 		const cartItems = await db.cartRow.findAll({
 			where: { cartId: id },
-			include: [
-				{
-					model: db.product,
-					as: "product",
-				},
-			],
+	
 		});
 		res.json(cartItems);
 	} catch (error) {
@@ -70,6 +65,8 @@ router.get("/:id", async (req, res) => {
 		res.status(500).json({ message: "Internal server error" });
 	}
 });
+
+
 
 router.get("/", (req, res) => {
 	db.cart.findAll().then((result) => {
@@ -94,39 +91,63 @@ router.delete("/", (req, res) => {
 		});
 });
 
-router.post("/:userId/addToCart", async (req, res) => {
+// router.post("/:userId/addToCart", async (req, res) => {
+// 	const { userId } = req.params;
+// 	// const { userId } = 1;
+// 	const { productId } = req.body;
+// 	console.log("Adding to cart", { userId, productId });
+
+// 	try {
+// 		let cart = await db.cart.findOne({
+// 			where: { userId: userId, payed: false },
+// 		});
+// 		console.log("Found or creating cart", cart);
+
+// 		if (!cart) {
+// 			cart = await db.cart.create({ userId: userId, payed: false });
+// 			console.log("Created new cart", cart);
+// 		}
+
+// 		const cartItem = await db.cart.create({
+// 			cartId: cart.id,
+// 			userId: 1,
+// 			productId: productId,
+// 			quantity: 1,
+// 		});
+// 		console.log("Added product to cart", cartItem);
+
+// 		res.status(201).json(cartItem);
+// 	} catch (error) {
+// 		console.error("Failed to add product to cart:", error);
+// 		res.status(500).json({ message: "Internal server error" });
+// 	}
+// });
+
+router.get("/cart/:userId", async (req, res) => {
 	const { userId } = req.params;
-	// const { userId } = 1;
-	const { productId } = req.body;
-	console.log("Adding to cart", { userId, productId });
 
 	try {
-		let cart = await db.cart.findOne({
-			where: { userId: userId, payed: false },
-		});
-		console.log("Found or creating cart", cart);
+			// Hitta den befintliga varukorgen för användaren som inte har betalats
+			const cart = await db.cart.findOne({
+					where: { userId: userId, payed: false },
+					include: [{
+							model: db.cartRow,
+							as: 'cartItems',
+							include: ['product']
+					}]
+			});
 
-		if (!cart) {
-			cart = await db.cart.create({ userId: userId, payed: false });
-			console.log("Created new cart", cart);
-		}
+			if (!cart) {
+					return res.status(404).json({ message: "Ingen aktiv varukorg hittades för användaren." });
+			}
 
-		const cartItem = await db.cart.create({
-			cartId: cart.id,
-			userId: 1,
-			productId: productId,
-			quantity: 1,
-		});
-		console.log("Added product to cart", cartItem);
-
-		res.status(201).json(cartItem);
+			// Returnera varukorgens innehåll
+			res.status(200).json(cart);
 	} catch (error) {
-		console.error("Failed to add product to cart:", error);
-		res.status(500).json({ message: "Internal server error" });
+			console.error("Error fetching cart:", error);
+			res.status(500).json({ message: "Internt serverfel vid hämtning av varukorgen." });
 	}
 });
-
-
 
 router.get("/addProduct", (req, res) => {
 	db.cart.findAll().then((result) => {

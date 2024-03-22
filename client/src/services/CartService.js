@@ -66,3 +66,8 @@ export async function addToCart(cartId, productId, amount) {
 		throw error;
 	}
 }
+export async function fetchCart(userId) {
+  return axios.get(`/cart/${userId}`)
+    .then(response => response.data)
+    .catch(error => console.error("Failed to fetch cart:", error));
+}

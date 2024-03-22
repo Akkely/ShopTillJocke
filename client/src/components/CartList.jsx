@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Cart from "./Cart";
-import { getAll } from "../services/CartService";
+import { getAll,fetchCart } from "../services/CartService";
 
 function CartList() {
 	const [carts, setCarts] = useState([]);
+	const [cartItems, setCartItems] = useState([]);
+	const [cart, setCart] = useState([]);
 
 	useEffect(() => {
 		getAll().then((data) => {
@@ -16,6 +18,16 @@ function CartList() {
 		});
 	}, []);
 
+
+	useEffect(() => {
+    const userId = 1; // Exempel på användar-ID
+    fetchCart(userId)
+      .then(cart => {
+        setCartItems(cart.cartItems || []); // Antag att 'cartItems' är din datastruktur
+      });
+  }, []);
+
+
 	if (carts.length === 0) {
 		return <h3>Kunde inte hämta kundkorg</h3>;
 	}
@@ -24,11 +36,11 @@ function CartList() {
 		<>
 			<h2>Kundkorgar</h2>
 			<ul>
-			{carts.map((cartItem) => (
-  <li key={cartItem.id}>
-    <Cart text={cartItem.name} />
-  </li>
-))}
+				{cartItems.map((item, index) => (
+					<li key={index}>
+						Produkt: {item.product.name}, Antal: {item.amount}
+					</li>
+				))}
 			</ul>
 		</>
 	);

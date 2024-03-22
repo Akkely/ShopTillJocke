@@ -7,6 +7,7 @@ import ProductEdit from './views/ProductEdit.jsx';
 import Products from './views/Products.jsx';
 import ProductDetail from './views/ProductDetail.jsx';
 import CartView from './views/CartView.jsx';
+
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CartDetail from './views/CartDetail'; // Import your component
 
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/carts/:id',
-        element: <CartDetail />
+        element: <CartView/>
       },
     
       {

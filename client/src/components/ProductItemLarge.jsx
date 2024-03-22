@@ -14,7 +14,8 @@ function ProductItemLarge({ product }) {
 		try {
 			// Directly use the hardcoded user ID
 			const cartId = "1"; // Assuming "1" is the ID of your single user
-			await addToCart(cartId, product.id);
+			const userId='4';
+			await addToCart(cartId, product.id,userId);
 			alert("Product added to cart!");
 		} catch (error) {
 			console.error("Could not add product to cart", error);

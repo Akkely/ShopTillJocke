@@ -3,33 +3,43 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { getCartById } from "../services/CartService"; // Assuming getAll fetches all carts with their contents
+import { getCartById,fetchCart  } from "../services/CartService"; // Assuming getAll fetches all carts with their contents
 
 function Cart() {
-	const { id } = useParams();
-	console.log("hejsan", id);
+	// const { id } = useParams();
+	const [cart, setCart] = useState([]);
+	const [cartItems, setCartItems] = useState([]);
+	// console.log("hejsan", id);
 
-	const userId = "1"; // Assuming "1" is the ID of your single user
 
 	useEffect(() => {
-		getCartById(id)
-			.then((data) => {
-				console.log(data); // Log the fetched data to see its structure
-				setCart(data);
-			})
-			.catch((error) => {
-				console.error("Failed to fetch cart details:", error);
-			});
-	}, [id]);
+    const userId = '1'; // Exempel på användar-ID
+    fetchCart(userId)
+      .then(cart => {
+        setCartItems(cart.cartItems || []); // Antag att 'cartItems' är din datastruktur
+      });
+  }, []);
 
 	return (
-		<Link to={`/carts/${userId}`}>
-			<Chip label={userId}></Chip>
-		</Link>
+
+		<>
+		<div>
+			<h2>Din Varukorg</h2>
+			<ul>
+				{cartItems.map((item, index) => (
+					<li key={index}>
+						Produkt: {item.product.name}, Antal: {item.amount}
+					</li>
+				))}
+			</ul>
+		</div>
+
+		
+		</>
 	);
 }
 Cart.propTypes = {
-	text: PropTypes.string.isRequired,
+	text: PropTypes.string,
 	// text: PropTypes.shape({
 	// 	id: PropTypes.number,
 	// 	title: PropTypes.string,
@@ -44,3 +54,6 @@ Cart.propTypes = {
 };
 
 export default Cart;
+
+
+// 	<Chip label={'hej'}></Chip>
