@@ -17,7 +17,7 @@ router.post("/addProduct", async (req, res) => {
 
 	try {
 		// Kontrollera först om det finns en befintlig varukorg för användaren som inte har betalats (payed: false)
-		let cart = await db.cart.findOne({
+		let cart = await db.cartItem.findOne({
 			where: { userId: userId, payed: false },
 		});
 
@@ -48,7 +48,7 @@ router.post("/addProduct", async (req, res) => {
 router.get("/:id", async (req, res) => {
 	const id = req.params.id;
 	try {
-		const cartItems = await db.cartItem.findAll({
+		const cartItems = await db.cartRow.findAll({
 			where: { cartId: id },
 			include: [
 				{
@@ -119,62 +119,6 @@ router.post("/:userId/addToCart", async (req, res) => {
 	}
 });
 
-router.get("/carts", async (req, res) => {
-	try {
-		const carts = await db.Cart.findAll({
-			include: [
-				{
-					model: db.CartItem, // Assuming you have a CartItem model for items in a cart
-					as: "items", // Alias for the relationship
-					include: [
-						{
-							model: db.Product, // Assuming each cart item is linked to a product
-							as: "product",
-						},
-					],
-				},
-			],
-		});
-		res.json(carts);
-	} catch (error) {
-		console.error("Error fetching carts:", error);
-		res.status(500).send("Internal Server Error");
-	}
-});
-
-
-
-router.get("/test/addProduct", async (req, res) => {
-	const { userId, productId, amount } = req.query; // Notera användningen av req.query istället för req.body
-
-	try {
-			let cart = await db.cart.findOne({
-					where: { userId: userId, payed: false },
-			});
-
-			if (!cart) {
-					cart = await db.cart.create({ userId: userId, payed: false });
-			}
-
-			const cartItem = await db.cartItem.create({
-					cartId: cart.id,
-					productId: productId,
-					quantity: amount,
-			});
-
-			res.status(201).json({
-					message: "Produkten har lagts till i varukorgen via GET-förfrågan (för testning)",
-					cartItem: cartItem,
-			});
-	} catch (error) {
-			console.error("Fel vid tillägg av produkt till varukorgen via GET-förfrågan:", error);
-			res.status(500).json({
-					message: "Internt serverfel vid tillägg av produkt till varukorgen via GET-förfrågan",
-			});
-	}
-});
-
-
 
 
 router.get("/addProduct", (req, res) => {
@@ -183,17 +127,8 @@ router.get("/addProduct", (req, res) => {
 	});
 });
 
-router.get("/carts", (req, res) => {
-	db.cart.findAll({
-			include: [{
-					model: db.product,
-					as: 'products' // Antaget att du har definierat denna association
-			}]
-	}).then((carts) => {
-			res.json(carts);
-	}).catch((error) => {
-			console.error("Error fetching carts:", error);
-			res.status(500).json({ message: "Internal server error" });
-	});
+router.get("/cartspro", (req, res) => {
+   
+			res.send(req.params)
 });
 module.exports = router;
