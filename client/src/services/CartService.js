@@ -44,13 +44,14 @@ export async function getCartById(cartId) {
 	}
 }
 
-export async function addToCart(userId, productId, amount) {
+export async function addToCart(cartId, productId, amount) {
 	try {
 		// Gör ett POST-anrop till din backend-tjänst för att lägga till en produkt i varukorgen
 		const response = await axios.post("/carts/addProduct", {
-			userId,
-			productId,
-			amount,
+
+      cartId: cartId,
+      productId: productId,
+      amount: amount,
 		});
 
 		if (response.status === 200 || response.status === 201) {

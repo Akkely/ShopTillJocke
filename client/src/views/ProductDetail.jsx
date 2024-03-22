@@ -21,20 +21,18 @@ function ProductDetail() {
 
 
   
-	const handleAddToCart = async () => {
-		try {
-			// Directly use the hardcoded user ID
-			// const userId = "1"; // Assuming "1" is the ID of your single user
-      const { id, name, price } = product;
-      const cartItem = { id, name, price, quantity: 1 };
-      setCartItems((prevCartItems) => [...prevCartItems, cartItem]);
-			
-			alert('Product added to cart!');
-		} catch (error) {
-			console.error("Could not add product to cart", error);
-			alert('Failed to add product to cart.');
-		}
-	};
+  const handleAddToCart = () => {
+    // Hämta produktinformation
+    const { id, name, price } = product;
+  
+    // Skapa nytt kundvagnsobjekt
+    const cartItem = { id, name, price, quantity: 1 };
+
+    // Uppdatera kundvagnens state
+    setCartItems((prevCartItems) => [...prevCartItems, cartItem]); 
+    // setCartItems([...cartItems, cartItem]);
+    alert("Produkt tillagd i varukorgen!");
+  };
 
 
 	// const handleAddToCart = () => {

@@ -4,14 +4,17 @@ import {} from "react-router-dom";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Button } from "@mui/material";
 import { addToCart } from "../services/CartService";
-
+import { useState, useEffect } from "react";
 function ProductItemLarge({ product }) {
+
+
+	const [cart, setCart] = useState([]);
 	// const { addToCart } = require("../services/CartService");
 	const handleAddToCart = async () => {
 		try {
 			// Directly use the hardcoded user ID
-			const userId = "1"; // Assuming "1" is the ID of your single user
-			await addToCart(userId, product.id);
+			const cartId = "1"; // Assuming "1" is the ID of your single user
+			await addToCart(cartId, product.id);
 			alert("Product added to cart!");
 		} catch (error) {
 			console.error("Could not add product to cart", error);
@@ -34,12 +37,13 @@ function ProductItemLarge({ product }) {
 				{" "}
 				Add to Cart
 			</Button>
+				{/* <button onClick={() => handleAddToCart(product.id)}>
+		Add to Cart
+	</button>; */}
 		</>
 	);
 
-	<button onClick={() => handleAddToCart(userId, product.id)}>
-		Add to Cart
-	</button>;
+
 }
 // Vi har lagt till emptyProduct i propTypes  för att släcka id i ProductEdit.
 ProductItemLarge.propTypes = {
