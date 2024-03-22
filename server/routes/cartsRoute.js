@@ -27,6 +27,7 @@ router.post("/addProduct", async (req, res) => {
 
     // Lägg till produkten i varukorgen
     const cartItem = await db.cartRow.create({
+			name: productId.title,
       cartId: cart.id,
       productId: productId,
       amount: amount,
@@ -57,7 +58,10 @@ router.get("/:id", async (req, res) => {
 	try {
 		const cartItems = await db.cartRow.findAll({
 			where: { cartId: id },
-	
+	// include: [{
+  //   model: db.product, // Inkludera produkter som är relaterade till kundvagnsobjekten
+  //   as: 'product', // Se till att du har definierat en lämplig association i dina modeller
+  // }]
 		});
 		res.json(cartItems);
 	} catch (error) {
@@ -123,7 +127,7 @@ router.delete("/", (req, res) => {
 // 	}
 // });
 
-router.get("/cart/:userId", async (req, res) => {
+router.get("/:userId", async (req, res) => {
 	const { userId } = req.params;
 
 	try {
@@ -159,4 +163,11 @@ router.get("/cartspro", (req, res) => {
    
 			res.send(req.params)
 });
+
+
+
+
+
+
+
 module.exports = router;

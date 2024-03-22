@@ -15,7 +15,7 @@ function App() {
           </Button>
 
           <Button color='inherit'>
-							<Link to='/cart'>Varukorg</Link>
+							<Link to='/carts'>Varukorg</Link>
 				</Button>
         </Toolbar>
       </AppBar>
