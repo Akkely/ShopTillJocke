@@ -10,6 +10,40 @@ const postService = require("../services/postService");
 // 		res.status(result.status).json(result.data);
 // 	});
 // });
+
+// POST route för att lägga till en produkt i varukorgen
+router.post("/carts/addProduct", async (req, res) => {
+	const { userId, productId, amount } = req.body;
+
+	try {
+		// Kontrollera först om det finns en befintlig varukorg för användaren som inte har betalats (payed: false)
+		let cart = await db.cart.findOne({
+			where: { userId: userId, payed: false },
+		});
+
+		// Om ingen varukorg finns, skapa en ny
+		if (!cart) {
+			cart = await db.cart.create({ userId: userId, payed: false });
+		}
+
+		// Lägg till produkten i varukorgen
+		const cartItem = await db.cartItem.create({
+			cartId: cart.id,
+			productId: productId,
+			quantity: amount,
+		});
+
+		res.status(201).json({
+			message: "Produkten har lagts till i varukorgen",
+			cartItem: cartItem,
+		});
+	} catch (error) {
+		console.error("Fel vid tillägg av produkt till varukorgen:", error);
+		res.status(500).json({
+			message: "Internt serverfel vid tillägg av produkt till varukorgen",
+		});
+	}
+});
 // Retrieve products by cart ID
 router.get("/:id", async (req, res) => {
 	const id = req.params.id;
@@ -108,4 +142,35 @@ router.get("/carts", async (req, res) => {
 	}
 });
 
+
+
+router.get("/test/addProduct", async (req, res) => {
+	const { userId, productId, amount } = req.query; // Notera användningen av req.query istället för req.body
+
+	try {
+			let cart = await db.cart.findOne({
+					where: { userId: userId, payed: false },
+			});
+
+			if (!cart) {
+					cart = await db.cart.create({ userId: userId, payed: false });
+			}
+
+			const cartItem = await db.cartItem.create({
+					cartId: cart.id,
+					productId: productId,
+					quantity: amount,
+			});
+
+			res.status(201).json({
+					message: "Produkten har lagts till i varukorgen via GET-förfrågan (för testning)",
+					cartItem: cartItem,
+			});
+	} catch (error) {
+			console.error("Fel vid tillägg av produkt till varukorgen via GET-förfrågan:", error);
+			res.status(500).json({
+					message: "Internt serverfel vid tillägg av produkt till varukorgen via GET-förfrågan",
+			});
+	}
+});
 module.exports = router;
