@@ -1,42 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { fetchCart,getAll } from '../services/CartService'; // Importera din fetchCart funktion
+import React, { useEffect, useState } from "react";
+import { fetchCart, getAll } from "../services/CartService"; // Importera din fetchCart funktion
 
-function CartView() {
+
+function CartView({ }) {
+
     const [cartItems, setCartItems] = useState([]);
-    const userId = 1; // Exempel på användar-ID, byt ut mot faktiskt värde
-  
+
+	const total = calculateTotal(cartItems);
     useEffect(() => {
-      fetchCart(userId)
-        .then(cart => {
-          console.log("Fetched cart:", cart);
-          setCartItems(cart || []); // Antag att cart direkt innehåller lista med varukorgsobjekt
-        })
-        .catch(error => console.error("Failed to fetch cart:", error));
-    }, []);
-  
-    return (
-      <div>
-        <h2>Din Varukorg</h2>
-        {cartItems.length > 0 ? (
-          cartItems.map((item, index) => (
-            <div key={index}>
-              {/* Visa ID och antal direkt från objektet */}
+        const fetchAndSetCartItems = async () => {
+          try {
+            const userId = 1; 
+            const fetchedCartItems = await fetchCart(userId);
+            setCartItems(fetchedCartItems); 
+          } catch (error) {
+            console.error("Failed to fetch cart items:", error);
+            // Hantera laddningsfel (visa en laddningsindikator eller lämpligt meddelande)
+          } 
+        };
+        fetchAndSetCartItems();
+      }, []); // Kör endast vid komponentladdning
 
 
-              Produkt ID: {item.id},  Test:  testslut, Antal: {item.amount || 'Okänt'}
-            </div>
-          ))
+
+	return (
+        <div>
+        <h2>Din kundvagn</h2>
+        {cartItems.length === 0 ? (
+          <p>Kundvagnen är tom</p>
         ) : (
-          <p>Din varukorg är tom.</p>
+          <ul>
+            {cartItems.map((item) => (
+              <li key={item.id}>
+                namn{item.name} - pris{item.price} kr x antal {item.quantity} = {item.price * item.quantity} kr
+              </li>
+            ))}
+          </ul>
         )}
+        <p>Totalt: {total} kr</p>
       </div>
     );
   }
-
+  function calculateTotal(cartItems) {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  }
 export default CartView;
 
 // Hjälpfunktioner
-
 
 // function CartView() {
 //     return (

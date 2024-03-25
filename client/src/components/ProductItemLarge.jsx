@@ -5,23 +5,17 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { Button } from "@mui/material";
 import { addToCart } from "../services/CartService";
 import { useState, useEffect } from "react";
-function ProductItemLarge({ product }) {
 
 
-	const [cart, setCart] = useState([]);
-	// const { addToCart } = require("../services/CartService");
-	const handleAddToCart = async () => {
-		try {
-			// Directly use the hardcoded user ID
-			const cartId = "1"; // Assuming "1" is the ID of your single user
-			const userId='4';
-			await addToCart(cartId, product.id,userId);
-			alert("Product added to cart!");
-		} catch (error) {
-			console.error("Could not add product to cart", error);
-			alert("Failed to add product to cart.");
-		}
-	};
+
+
+
+	function ProductItemLarge({ product, cartItems, setCartItems }) {
+		const handleAddToCart = (product) => {
+			const updatedCartItems = [...cartItems, product];
+			setCartItems(updatedCartItems);
+			alert("Produkt tillagd i varukorgen!");
+		};
 
 	return (
 		<>

@@ -27,7 +27,6 @@ router.post("/addProduct", async (req, res) => {
 
     // Lägg till produkten i varukorgen
     const cartItem = await db.cartRow.create({
-			name: productId.title,
       cartId: cart.id,
       productId: productId,
       amount: amount,
@@ -135,9 +134,11 @@ router.get("/:userId", async (req, res) => {
 			const cart = await db.cart.findOne({
 					where: { userId: userId, payed: false },
 					include: [{
-							model: db.cartRow,
-							as: 'cartItems',
-							include: ['product']
+						model: db.cartRow,
+						as: 'cartItems',
+						include: [{
+							model: db.product
+						}]
 					}]
 			});
 
