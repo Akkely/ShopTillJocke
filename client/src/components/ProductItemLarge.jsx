@@ -9,13 +9,22 @@ import { useState, useEffect } from "react";
 
 
 
+function ProductItemLarge({ product }) {
+	const [amount, setAmount] = useState(1); // Antag att du vill lägga till 1 produkt som standard
+	// Ersätt 'hardcodedCartId' med faktisk logik för att hämta den aktuella användarens varukorgs-ID
+	const hardcodedCartId = 1; // Exempel på hårdkodat varukorgs-ID
 
-	function ProductItemLarge({ product, cartItems, setCartItems }) {
-		const handleAddToCart = (product) => {
-			const updatedCartItems = [...cartItems, product];
-			setCartItems(updatedCartItems);
-			alert("Produkt tillagd i varukorgen!");
-		};
+	const handleAddToCart = async () => {
+			try {
+					// Anropa addToCart med den hårdkodade varukorgs-ID, produkt-ID och önskat antal
+					const cartItem = await addToCart(hardcodedCartId, product.id, amount);
+					alert("Produkt tillagd i varukorgen!");
+			} catch (error) {
+					console.error("Could not add product to cart", error);
+					alert("Misslyckades med att lägga till produkt i varukorgen.");
+			}
+	};
+
 
 	return (
 		<>

@@ -44,7 +44,7 @@ export async function getCartById(cartId) {
 	}
 }
 
-export async function addToCart(cartId, productId, amount) {
+export async function addToCart(cartId, productId, amount, title, price) {
 	try {
 		// Gör ett POST-anrop till din backend-tjänst för att lägga till en produkt i varukorgen
 		const response = await axios.post("/carts/addProduct", {
@@ -52,6 +52,10 @@ export async function addToCart(cartId, productId, amount) {
       cartId: cartId,
       productId: productId,
       amount: amount,
+			title, // Skicka med produktens titel
+			price, // Skicka med produktens pris
+			
+			
 		});
 
 		if (response.status === 200 || response.status === 201) {

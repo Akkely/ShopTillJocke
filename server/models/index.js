@@ -86,6 +86,17 @@ db.user.hasMany(db.cart, {
 	onDelete: "CASCADE",
 }); */
 
+
+// I din Sequelize-modelldefinition, lägg till följande:
+db.cartRow.belongsTo(db.cart, { foreignKey: 'cartId', as: 'cart' });
+db.cartRow.belongsTo(db.product, { foreignKey: 'productId', as: 'product' });
+
+// Och sedan, för att komplettera relationerna:
+db.cart.hasMany(db.cartRow, { foreignKey: 'cartId', as: 'cartRows' });
+db.product.hasMany(db.cartRow, { foreignKey: 'productId', as: 'cartRows' });
+
+
+
 db.cart.belongsTo(db.user, { foreignKey: { allowNull: false } });
 db.user.hasMany(db.cart, {
 	allowNull: false,
@@ -94,8 +105,8 @@ db.user.hasMany(db.cart, {
 
 
 
-db.product.belongsToMany(db.cart, { through: db.cartRow });
-db.cart.belongsToMany(db.product, { through: db.cartRow });
+// db.product.belongsToMany(db.cart, { through: db.cartRow });
+// db.cart.belongsToMany(db.product, { through: db.cartRow });
 
 db.review.belongsTo(db.product);
 db.product.hasMany(db.review, {

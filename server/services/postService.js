@@ -35,18 +35,57 @@ async function getAll() {
 
 async function getByCart(cartId) {
 	try {
-		const cart = await db.cart.findOne({ where: { id: cartId } });
-		const allProducts = await cart.getProducts({
-			// include: [db.user, db.cart],
-		});
-		/* Om allt blev bra, returnera allPosts */
-		return createResponseSuccess(
-			allProducts.map((product) => _formatProduct(product))
-		);
+		// const cart = await db.cart.findOne({ where: { id: cartId } });
+		 const cart = await db.cart.findOne({ where: { id: cartId } });
+		// /* Om allt blev bra, returnera allPosts */
+		return createResponseSuccess( _formatCart(cart));
 	} catch (error) {
 		return createResponseError(error.status, error.message);
 	}
 }
+
+// async function getCartWithProducts(cartId) {
+// 	// Här skulle du använda Sequelize för att hämta varukorgen och dess associerade produkter
+// 	// Exempel på Sequelize-query som hämtar varukorg med produkter:
+// 	const cart = await db.cart.findAll({
+// 			where: { id: cartId },
+			
+// 			include: [{
+// 				through: db.cartRow,
+// 					model: db.product,
+					
+// 					as: 'products' // Se till att detta 'as' matchar hur du har definierat relationen i din Sequelize-modell
+// 			}]
+// 	});
+
+// 	if (!cart) {
+// 			return null; // Eller hantera detta fall på lämpligt sätt
+// 	}
+
+// 	return cart; // Returnerar hela varukorgen med produkter inbäddade
+// }
+
+
+
+// async function getByCart(cartId) {
+// 	try {
+// 		const cart = await db.cart.findOne({ where: { id: cartId } });
+// 		const allProducts = await cart.getProducts({
+// 			include: [db.user, db.cart, db.product],
+// 		});
+// 		/* Om allt blev bra, returnera allPosts */
+// 		return createResponseSuccess(
+// 			allProducts.map((cart) => _formatCart(cart))
+// 		);
+// 	} catch (error) {
+// 		return createResponseError(error.status, error.message);
+// 	}
+// }
+
+
+
+
+
 
 // Ska det vara product eller cart? Vad ska hämtas? /* */
 async function getByUser(userId) {
@@ -92,6 +131,23 @@ async function addReview(id, review) {
 		return createResponseError(error.status, error.message);
 	}
 }
+
+async function addProToCart(id, cart) {
+	if (!id) {
+		return createResponseError(422, "Id är obligatoriskt");
+	}
+	try {
+		cart.productId = id;
+		const cartItem = await db.cart.create(cartItem);
+		return createResponseSuccess(cartItem);
+	} catch (error) {
+		return createResponseError(error.status, error.message);
+	}
+}
+
+
+
+
 
 
 
@@ -161,15 +217,6 @@ function _formatProduct(product) {
 		createdAt: product.createdAt,
 		updatedAt: product.updatedAt,
 
-		// author: {
-
-		// 	    // id: post.user.id,
-		// 	// id: product.user.id,
-		// 	// email: product.user.email,
-		// 	// firstName: review.user.firstName,
-		// 	// lastName: product.user.lastName,
-		// },
-
 		carts: [],
 		reviews: [],
 	};
@@ -180,20 +227,16 @@ function _formatProduct(product) {
 		product.reviews.map((review) => {
 			return (cleanProduct.reviews = [
 				{
-					//id: user.id,
-					// review (title).review.review (title)
 					review: review.review,
 					title: review.title,
 					body: review.body,
-					// author: user.id,
-
-					//  author: comment.user.username,
 					createdAt: review.createdAt,
 				},
 				...cleanProduct.reviews,
 			]);
 		});
 	}
+
 	// 	if (product.reviews) {
 	//     cleanProduct.reviews = product.reviews.map((review) => ({
 	// 			review:review.review,
@@ -212,6 +255,36 @@ function _formatProduct(product) {
 	// **********************
 	return cleanProduct;
 }
+
+
+function _formatCart(cart) {
+	const cleanCart = {
+		id: cart.id,
+		createdAt: cart.createdAt,
+		updatedAt: cart.updatedAt,
+
+
+	};
+	if (cart.product) {
+		cleanCart.products = [];
+
+		cart.products.map((product) => {
+			return (cleanCart.products = [
+				{
+					title: product.title,
+					body: product.body,
+					createdAt: product.createdAt,
+				},
+				...cleanCart.products,
+			]);
+		});
+	}
+	return cleanCart;
+}
+
+
+
+
 
 async function _findOrCreateCartId(name) {
 	name = name.toLowerCase().trim();
@@ -232,9 +305,10 @@ async function _addProductToCart(product, carts) {
 }
 
 module.exports = {
+	// getCartWithProducts,
 	_findOrCreateCartId,
 	_addProductToCart,
-	getByCart,
+	 getByCart,
 	getByUser,
 	addReview,
 	getById,
@@ -242,5 +316,6 @@ module.exports = {
 	create,
 	update,
 	destroy,
+	addProToCart
 
 };
