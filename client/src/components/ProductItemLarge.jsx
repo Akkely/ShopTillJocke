@@ -13,11 +13,12 @@ function ProductItemLarge({ product }) {
 	const [amount, setAmount] = useState(1); // Antag att du vill lägga till 1 produkt som standard
 	// Ersätt 'hardcodedCartId' med faktisk logik för att hämta den aktuella användarens varukorgs-ID
 	const hardcodedCartId = 1; // Exempel på hårdkodat varukorgs-ID
+	const userId= 1;
 
 	const handleAddToCart = async () => {
 			try {
 					// Anropa addToCart med den hårdkodade varukorgs-ID, produkt-ID och önskat antal
-					const cartItem = await addToCart(hardcodedCartId, product.id, amount);
+					const cartItem = await addToCart(hardcodedCartId, product.id, amount,userId);
 					alert("Produkt tillagd i varukorgen!");
 			} catch (error) {
 					console.error("Could not add product to cart", error);
