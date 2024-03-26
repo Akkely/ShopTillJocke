@@ -38,7 +38,7 @@ async function getByCart(cartId) {
 		// const cart = await db.cart.findOne({ where: { id: cartId } });
 		 const cart = await db.cart.findOne({ where: { id: cartId } });
 		// /* Om allt blev bra, returnera allPosts */
-		return createResponseSuccess( _formatCart(cart));
+		return createResponseSuccess( _formatProduct(cart));
 	} catch (error) {
 		return createResponseError(error.status, error.message);
 	}
@@ -132,12 +132,12 @@ async function addReview(id, review) {
 	}
 }
 
-async function addProToCart(id, cart) {
+async function addProToCart(id, product) {
 	if (!id) {
 		return createResponseError(422, "Id är obligatoriskt");
 	}
 	try {
-		cart.productId = id;
+		product.cartId = id;
 		const cartItem = await db.cart.create(cartItem);
 		return createResponseSuccess(cartItem);
 	} catch (error) {

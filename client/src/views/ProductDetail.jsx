@@ -79,7 +79,7 @@ function ProductDetail() {
 			>
 				Lägg till i kundvagn
 			</Button>
-			<CartView cartItems={cartItems} /> 
+			{/* <CartView cartItems={cartItems} />  */}
 		</div>
 	) : (
 		<h3>Kunde inte hämta produkten</h3>

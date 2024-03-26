@@ -44,17 +44,14 @@ export async function getCartById(cartId) {
 	}
 }
 
-export async function addToCart(cartId, productId, amount, title, price) {
+export async function addToCart(cartId, productId, amount) {
 	try {
 		// Gör ett POST-anrop till din backend-tjänst för att lägga till en produkt i varukorgen
 		const response = await axios.post("/carts/addProduct", {
 
       cartId: cartId,
       productId: productId,
-      amount: amount,
-			title, // Skicka med produktens titel
-			price, // Skicka med produktens pris
-			
+      amount: amount,	
 			
 		});
 
@@ -70,8 +67,8 @@ export async function addToCart(cartId, productId, amount, title, price) {
 		throw error;
 	}
 }
-export async function fetchCart(userId) {
-  return axios.get(`/carts/${userId}`)
+export async function fetchCart(cartId) {
+  return axios.get(`/carts/${cartId}`)
     .then(response => response.data)
     .catch(error => console.error("Failed to fetch cart:", error));
 }
