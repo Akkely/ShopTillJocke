@@ -44,26 +44,6 @@ async function getByCart(cartId) {
 	}
 }
 
-// async function getCartWithProducts(cartId) {
-// 	// Här skulle du använda Sequelize för att hämta varukorgen och dess associerade produkter
-// 	// Exempel på Sequelize-query som hämtar varukorg med produkter:
-// 	const cart = await db.cart.findAll({
-// 			where: { id: cartId },
-			
-// 			include: [{
-// 				through: db.cartRow,
-// 					model: db.product,
-					
-// 					as: 'products' // Se till att detta 'as' matchar hur du har definierat relationen i din Sequelize-modell
-// 			}]
-// 	});
-
-// 	if (!cart) {
-// 			return null; // Eller hantera detta fall på lämpligt sätt
-// 	}
-
-// 	return cart; // Returnerar hela varukorgen med produkter inbäddade
-// }
 
 
 

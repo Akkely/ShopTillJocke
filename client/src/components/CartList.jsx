@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Cart from "./Cart";
 import { getAll,fetchCart } from "../services/CartService";
 
 function CartList() {

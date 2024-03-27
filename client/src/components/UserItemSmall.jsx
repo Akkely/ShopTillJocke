@@ -8,14 +8,11 @@ function UserItemSmall({user}) {
     <>
     <Link to={`/users/${user.id}/products`}>
       <h3>{UserList.user.id}</h3>
-       
     </Link>
   </>
 
-
   );
   
-
 }
 UserItemSmall.propTypes = {
   user: PropTypes.shape({

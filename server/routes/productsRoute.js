@@ -55,21 +55,5 @@ router.delete("/", (req, res) => {
 	});
 });
 
-// Eventuellt senare
-// router.get('/:id/getReview', (req, res) => {
-//   const id = req.params.id;
-//   postService.getById(id).then((result) => {
-//     res.status(result.status).json(result.data);
-//   });
-// });
-
-// router.put('/:id/addReview', (req, res) => {
-//   const review = req.body;
-//   const id = review.id;
-
-//   postService.update(review, id).then((result) => {
-//     res.status(result.status).json(result.data);
-//   });
-// });
 
 module.exports = router;

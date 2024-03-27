@@ -1,17 +1,24 @@
 import ProductItemLarge from "../components/ProductItemLarge";
-import { Button } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
 import Review from "../components/Review";
-import { useState, useEffect } from "react";
 import { getOne, addReview } from "../services/ProductService";
-import CartView from "./CartView";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import EditIcon from "@mui/icons-material/Edit";
+
+import {
+	Alert,
+	Box,
+	Button,
+	Container,
+	Typography,
+	List
+} from "@mui/material";
 
 function ProductDetail() {
 	const { id } = useParams();
 	const [product, setProduct] = useState(null);
-	const [cartItems, setCartItems] = useState([]);
 
 	useEffect(() => {
 		getOne(id).then((product) => setProduct(product));
@@ -19,68 +26,68 @@ function ProductDetail() {
 
 	const navigate = useNavigate();
 
-
-  
-  const handleAddToCart = () => {
-    // Hämta produktinformation
-    const { id, name, price } = product;
-  
-    // Skapa nytt kundvagnsobjekt
-    const cartItem = { id, name, price, quantity: 1 };
-
-    // Uppdatera kundvagnens state
-    setCartItems((prevCartItems) => [...prevCartItems, cartItem]); 
-    // setCartItems([...cartItems, cartItem]);
-    alert("Produkt tillagd i varukorgen!");
-  };
-
-
-	// const handleAddToCart = () => {
-	// 	// Hämta produktinformation
-	// 	const { id, name, price } = product;
-
-	// 	// Skapa nytt kundvagnsobjekt
-	// 	const cartItem = { id, name, price, quantity: 1 };
-
-	// 	// Uppdatera kundvagnens state
-	// 	setCartItems((prevCartItems) => [...prevCartItems, cartItem]);
-	// 	// setCartItems([...cartItems, cartItem]);
-	// 	alert("Produkt tillagd i varukorgen!");
-	// };
-
 	function onReviewAdd(review) {
 		addReview(product.id, review)
 			.then(() => getOne(id))
 			.then((product) => setProduct(product));
 	}
+	const location = useLocation();
+	const message = location.state?.message;
+	const [open, setOpen] = useState(true);
+
+	function clearMessage() {
+		window.history.replaceState({}, "");
+	}
 
 	return product ? (
-		<div>
-			<ProductItemLarge product={product} />
-			<Button onClick={() => navigate(-1)}>Tillbaka</Button>
-			<Button onClick={() => navigate(`/products/${product.id}/edit`)}>
-				{" "}
-				Ändra vara
-			</Button>
+		<>
+			{message && open && (
+				<Alert
+					onClose={() => {
+						setOpen(false);
+						clearMessage();
+					}}
+					variant='filled'
+					severity='success'
+				>
+					{message}
+				</Alert>
+			)}
 
-			<ReviewForm onSave={onReviewAdd} />
-			<h2>Andras recensioner</h2>
-			{product.reviews &&
-				product.reviews.map((review, i) => (
-					<Review key={`review_${i}`} review={review} />
-				))}
+			<Container maxWidth='lg'>
+				<ProductItemLarge product={product} />
+				<Box display='flex' justifyContent='space-between' mb={4}>
+					<Button
+						variant='contained'
+						color='secondary'
+						startIcon={<ChevronLeftIcon />}
+						sx={{ mr: 2 }}
+						onClick={() => navigate(-1)}
+					>
+						Tillbaka
+					</Button>
+					<Button
+						startIcon={<EditIcon />}
+						variant='contained'
+						onClick={() => navigate(`/products/${product.id}/edit`)}
+					>
+						Ändra vara
+					</Button>
+				</Box>
 
-			<Button
-				variant='contained'
-				color='primary'
-				startIcon={<ShoppingCartIcon />}
-				onClick={handleAddToCart}
-				aria-label='Lägg till i kundvagn'
-			>
-				Lägg till i kundvagn
-			</Button>
-			{/* <CartView cartItems={cartItems} />  */}
-		</div>
+				<Box>
+				<Typography variant="h3">Recension</Typography>
+				<ReviewForm onSave={onReviewAdd} />
+				<Typography variant="h3">Andras recensioner</Typography>
+				{product.reviews &&(
+				 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+					{product.reviews.map((review, i) => (
+						<Review key={`review_${i}`} review={review} />
+					))}
+</List>)}
+					</Box>
+			</Container>
+		</>
 	) : (
 		<h3>Kunde inte hämta produkten</h3>
 	);
@@ -88,47 +95,3 @@ function ProductDetail() {
 
 export default ProductDetail;
 
-// import ProductItemLarge from '../components/ProductItemLarge';
-// import { Button } from '@mui/material';
-// import { useNavigate, useParams } from 'react-router-dom';
-// import ReviewForm from '../components/ReviewForm';
-// import Review from '../components/Review';
-// import {useState, useEffect} from 'react';
-// import { getOne,addReview } from '../services/ProductService';
-
-// function ProductDetail() {
-// const { id } = useParams();
-// const [product, setProduct] = useState(null);
-
-// useEffect(() => {
-//   getOne(id).then((product) => setProduct(product));
-// }, [id]);
-
-//   const navigate = useNavigate();
-
-//   function onReviewAdd(review) {
-//     addReview(product.id, review)
-//     .then(()=>getOne(id))
-//     .then((product) => setProduct(product));
-//    }
-
-//   return product ? (
-//     <div>
-//       <ProductItemLarge product={product} />
-//       <Button onClick={() => navigate(-1)}>Tillbaka</Button>
-//       <Button onClick={() => navigate(`/products/${product.id}/edit`)}> Ändra vara</Button>
-
-//       <ReviewForm onSave = {onReviewAdd}  />
-//       <h2>Andras recensioner</h2>
-//       {product.reviews &&
-//         product.reviews.map((review, i) => (
-//           <Review key={`review_${i}`} review={review} />
-//         ))}
-
-//     </div>
-//   ):(
-//     <h3>Kunde inte hämta produkten</h3>
-//   );
-// }
-
-// export default ProductDetail;

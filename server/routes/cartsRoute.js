@@ -34,16 +34,6 @@ router.post("/addProduct", async (req, res) => {
 			],
 		});
 
-		// Hämta den fullständiga cartItem-informationen inklusive produktinformation
-		// const fullCartItem = await db.cartRow.findOne({
-		// 	where: { id: cartItem.id },
-		// 	include: [
-		// 		{
-		// 			model: db.product,
-		// 			as: "product", // Använd samma alias som definierat i associationen
-		// 		},
-		// 	],
-		// });
 
 		res.status(201).json({
 			message: "Produkten har lagts till i varukorgen",
@@ -58,7 +48,6 @@ router.post("/addProduct", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-	// const id = 1;
 	try {
 		const cartItems = await db.cart.findAll({
 			where: {},

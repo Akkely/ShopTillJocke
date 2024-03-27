@@ -8,7 +8,7 @@ function ReviewForm({onSave}) {
   return (
     <form>
       <div>
-        Rubrik till din recension: 
+        {/* Rubrik till din recension:  */}
         <TextField 
         value={review.title} 
         onChange={(e)=> setReview({ ...review, title: e.target.value})}
@@ -20,13 +20,13 @@ function ReviewForm({onSave}) {
       </div>
 
       <div>
-        Skriv din recension: {' '} 
+        {/* Skriv din : {' '}  */}
         <TextField
         multiline
         minRows={3}
         value={review.body}
         onChange={(e) => setReview({ ...review, body: e.target.value })}
-        label="Innehåll"
+        label="Recensions innehåll"
         name="body"
         id="body"
         />
@@ -40,10 +40,6 @@ function ReviewForm({onSave}) {
             setReview({ ...review, rating: newValue });
           }}
         />
-        
-     
-     
-        
       </div>
       <Button onClick={() => onSave(review)}>Spara recension</Button>
     </form>

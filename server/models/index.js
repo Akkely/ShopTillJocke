@@ -42,11 +42,7 @@ Object.keys(db).forEach((modelName) => {
 	}
 });
 
-/* db.user.belongsTo(db.cart, { foreignKey: { allowNull: false } });
-db.user.hasMany(db.cart, {
-	allowNull: false,
-	onDelete: "CASCADE",
-}); */
+
 
 db.cart.belongsTo(db.user, { foreignKey: { allowNull: false } });
 db.user.hasMany(db.cart, {
@@ -72,11 +68,3 @@ db.Sequelize = Sequelize;
 
 module.exports = db;
 
-
-// // I din Sequelize-modelldefinition, lägg till följande:
-// db.cartRow.belongsTo(db.cart, { foreignKey: 'cartId', as: 'cart' });
-// db.cartRow.belongsTo(db.product, { foreignKey: 'productId', as: 'product' });
-
-// // Och sedan, för att komplettera relationerna:
-// db.cart.hasMany(db.cartRow, { foreignKey: 'cartId', as: 'cartRows' });
-// db.product.hasMany(db.cartRow, { foreignKey: 'productId', as: 'cartRows' });
